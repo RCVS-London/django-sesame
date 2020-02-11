@@ -49,13 +49,21 @@ class UUIDPacker(object):
 
 class CharPacker:
     @staticmethod
-    def pack_pk(user_pk: str) -> int:
-        b = user_pk.encode("utf-8")
-        return int.from_bytes(b, byteorder='big')
+    def pack_pk(user_pk: str) -> bytes:
+        return user_pk.encode("utf-8")
 
     @staticmethod
-    def unpack_pk(data: int) -> bytes:
-        return data.to_bytes(((i.bit_length() + 7) // 8), byteorder='big'), data
+    def unpack_pk(data: bytes) -> str:
+        bytelist = [bytes([b]) for b in data]
+        reference_number = ""
+        i = 0
+        for b in bytelist:
+            try:
+                reference_number += (b.decode("utf-8"))
+                i += 1
+            except UnicodeDecodeError:
+                break
+        return reference_number, data[i:]
 
 
 PACKERS = {"AutoField": IntPacker, "IntegerField": IntPacker, "UUIDField": UUIDPacker, "CharField": CharPacker}
