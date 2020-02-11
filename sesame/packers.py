@@ -49,12 +49,12 @@ class UUIDPacker(object):
 
 class CharPacker:
     @staticmethod
-    def encode(data: str) -> int:
-        b = data.encode("utf-8")
+    def pack_pk(user_pk: str) -> int:
+        b = user_pk.encode("utf-8")
         return int.from_bytes(b, byteorder='big')
 
     @staticmethod
-    def decode(data: int) -> bytes:
+    def unpack_pk(data: int) -> bytes:
         return data.to_bytes(((i.bit_length() + 7) // 8), byteorder='big'), data
 
 
