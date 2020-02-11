@@ -47,4 +47,15 @@ class UUIDPacker(object):
         return uuid.UUID(bytes=data[:16]), data[16:]
 
 
-PACKERS = {"AutoField": IntPacker, "IntegerField": IntPacker, "UUIDField": UUIDPacker}
+class CharPacker:
+    @staticmethod
+    def encode(data: str) -> int:
+        b = data.encode("utf-8")
+        return int.from_bytes(b, byteorder='big')
+
+    @staticmethod
+    def decode(data: int) -> bytes:
+        return data.to_bytes(((i.bit_length() + 7) // 8), byteorder='big'), data
+
+
+PACKERS = {"AutoField": IntPacker, "IntegerField": IntPacker, "UUIDField": UUIDPacker, "CharField": CharPacker}
