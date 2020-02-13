@@ -54,16 +54,16 @@ class CharPacker:
 
     @staticmethod
     def unpack_pk(data):
-        bytelist = [bytes([b]) for b in data]
+        pk_end_position = len(data) - 16
+        pk_list = [bytes([byte]) for byte in data[:pk_end_position]]
         pk = ""
-        i = 0
-        for b in bytelist:
+        for byte in pk_list:
             try:
-                pk += b.decode("utf-8")
-                i += 1
+                pk += byte.decode("utf-8")
             except UnicodeDecodeError:
                 break
-        return pk, data[i:]
+        return pk, data[pk_end_position:]
+
 
 
 PACKERS = {"AutoField": IntPacker, "IntegerField": IntPacker, "UUIDField": UUIDPacker, "CharField": CharPacker}
